@@ -26,15 +26,15 @@ int main(int argc, const char** argv) {
 
     switch (test_case) {
         case TST_FOO_FIX: {
-            int to = atoi(data);
+            int to = strtol(data, NULL, 0);
             size_t ticks_count = timer_from(to);
             printf("%zu\n", ticks_count);
             break;
         }
         case TST_FOO_IMPL: {
             if (argc == 4) {
-                int base = atoi(data);
-                int pow =  atoi(argv[3]);
+                int base = strtol(data, NULL, 0);
+                int pow =  strtol(argv[3], NULL, 0);;
                 int res = custom_pow(base, pow);
 
                 printf("%i\n", res);
@@ -44,12 +44,12 @@ int main(int argc, const char** argv) {
             break;
         }
         case TST_MOD_IMPL: {
-            int num = atoi(data);
+            int num = strtol(data, NULL, 0);
             printf("%d\n", simple_num(num));
             break;
         }
         case TST_MOD_IMPL_2: {
-            int num = atoi(data);
+            int num = strtol(data, NULL, 0);
             recursion_output(num);
             break;
         }

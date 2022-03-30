@@ -12,6 +12,20 @@ int custom_pow(int base, int pow) {
     return result;
 }
 
+int quick_custom_pow(int base, int pow) {
+    if (pow == 0) {return 1;}
+    if (base == 0) {return 0;}
+    if (base == 1) {return 1;}
+
+    int result = 1;
+    while (pow != 0) {
+        if ((pow & 1) !=0) {result *= base;}
+        base *= base;
+        pow >>= 1;
+    }
+    return result;
+}
+
 size_t timer_from(int from) {
     if (from > 65535) {
         return 0;

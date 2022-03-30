@@ -7,4 +7,6 @@ size_t timer_from(int from);
 
 int custom_pow(int base, int pow);
 
+int quick_custom_pow(int base, int pow);
+
 #endif  // PROJECT_INCLUDE_UTILS_H_
