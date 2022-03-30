@@ -5,6 +5,12 @@
 #include <utils.h>
 
 int custom_pow(int base, int pow) {
+        if (pow == 0 || base == 1) {
+        return 1;
+        }
+    if (base == 0) {
+        return 0;
+        }
     int result = 1;
     for (int i = 0; i < pow; ++i) {
         result *= base;
