@@ -13,13 +13,17 @@ int custom_pow(int base, int pow) {
 }
 
 int quick_custom_pow(int base, int pow) {
-    if (pow == 0) {return 1;}
-    if (base == 0) {return 0;}
-    if (base == 1) {return 1;}
-
+    if (pow == 0 || base == 1) {
+        return 1;
+        }
+    if (base == 0) {
+        return 0;
+        }
     int result = 1;
     while (pow != 0) {
-        if ((pow & 1) !=0) {result *= base;}
+        if ((pow & 1) !=0) {
+            result *= base;
+            }
         base *= base;
         pow >>= 1;
     }
