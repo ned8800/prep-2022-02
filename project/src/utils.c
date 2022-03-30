@@ -5,6 +5,12 @@
 #include <utils.h>
 
 int custom_pow(int base, int pow) {
+        if (pow == 0 || base == 1) {
+        return 1;
+        }
+    if (base == 0) {
+        return 0;
+        }
     int result = 1;
     for (int i = 0; i < pow; ++i) {
         result *= base;
@@ -12,16 +18,34 @@ int custom_pow(int base, int pow) {
     return result;
 }
 
-size_t timer_from(unsigned int from) {
+int quick_custom_pow(int base, int pow) {
+    if (pow == 0 || base == 1) {
+        return 1;
+        }
+    if (base == 0) {
+        return 0;
+        }
+    int result = 1;
+    while (pow != 0) {
+        if ((pow & 1) !=0) {
+            result *= base;
+            }
+        base *= base;
+        pow >>= 1;
+    }
+    return result;
+}
+
+size_t timer_from(int from) {
     if (from > 65535) {
         return 0;
     }
-    size_t time = 0;
-    for (unsigned int i = from; i > 0; --i) {
+    int time = 0;
+    for (int i = from; i > 0; --i) {
         ++time;
-        printf("%u ", i);
+        printf("%d ", i);
         if (time == from) {
-            printf("%u\n", --i);
+            printf("%d\n", --i);
             return ++time;
         }
     }
