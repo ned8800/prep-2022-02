@@ -12,16 +12,16 @@ int custom_pow(int base, int pow) {
     return result;
 }
 
-size_t timer_from(unsigned int from) {
+size_t timer_from(int from) {
     if (from > 65535) {
         return 0;
     }
-    size_t time = 0;
-    for (unsigned int i = from; i > 0; --i) {
+    int time = 0;
+    for (int i = from; i > 0; --i) {
         ++time;
-        printf("%u ", i);
+        printf("%d ", i);
         if (time == from) {
-            printf("%u\n", --i);
+            printf("%d\n", --i);
             return ++time;
         }
     }

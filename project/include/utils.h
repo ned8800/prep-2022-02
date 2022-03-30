@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-size_t timer_from(unsigned int from);
+size_t timer_from(int from);
 
 int custom_pow(int base, int pow);
 
