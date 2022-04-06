@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "defines.h"
-#include "record_data.h"
-#include "functions.h"
+#include "record_functions.h"
+#include "custom_functions.h"
 
-#define TEST_FILENAME_CLIENT "client_test.dat"
+#define TEST_FILENAME_CLIENT "customer_test.dat"
 #define TEST_FILENAME_TRANSFER "transfer_test.dat"
 #define TEST_FILENAME_DATABASE "db_test.dat"
 
-int compare_char_arrays(char* array1, char* array2, int array_length) {
+int arrays_compare(char* array1, char* array2, int array_length) {
     for (int i = 0; i < array_length; i++) {
         if (array1[i] != array2[i]) {
             return 0;
@@ -16,39 +16,41 @@ int compare_char_arrays(char* array1, char* array2, int array_length) {
     return 1;
 }
 
-void test_read_write_data() {
-    data_t client_struct_input = {1, "name1", "sur1", "add1", "tel1", 100, 200, 50};
-    data_t transfer_struct_input = {1, " ", " ", " ", " ", 0, 0, 1000};
-    data_t expected_struct = {1, "name1", "sur1", "add1", "tel1", 100, 1200, 50};
-    data_t got_struct = {0};
-    FILE *cl_stream = fopen(TEST_FILENAME_CLIENT, "w+");
-    FILE *tr_stream = fopen(TEST_FILENAME_TRANSFER, "w+");
-    FILE *db_stream = fopen(TEST_FILENAME_DATABASE, "w+");
-    if (cl_stream == NULL || tr_stream == NULL || db_stream == NULL) {
+void test_customer_data() {
+    my_data customer_input = {1, "customer_name", "customer_sur", \
+     "customer_add", "customer_tel", 120, 100, 500};
+    my_data transfer_input = {1, " ", " ", " ", " ", 0, 0, 1000};
+    my_data expected_output = {1, "customer_name", "customer_sur", \
+     "customer_add", "customer_tel", 120, 100, 1500};
+    my_data buffer_data = {0};
+    FILE *customer_stream = fopen(TEST_FILENAME_CLIENT, "w+");
+    FILE *transfer_stream = fopen(TEST_FILENAME_TRANSFER, "w+");
+    FILE *database_stream = fopen(TEST_FILENAME_DATABASE, "w+");
+    if (customer_stream == NULL || transfer_stream == NULL || database_stream == NULL) {
         puts("exit");
     } else {
-        write_client_data_to_file(cl_stream, &client_struct_input);
-        rewind(cl_stream);
-        write_transfer_data_to_file(tr_stream, &transfer_struct_input);
-        rewind(tr_stream);
-        update_database(cl_stream, tr_stream, db_stream, &client_struct_input, &transfer_struct_input);
-        rewind(db_stream);
-        read_client_data(db_stream, &got_struct);
-        if (expected_struct.number == got_struct.number  &&\
-            compare_char_arrays(expected_struct.name, got_struct.name, kNameSize) &&\
-            compare_char_arrays(expected_struct.surname, got_struct.surname, kSurnameSize) &&\
-            compare_char_arrays(expected_struct.address, got_struct.address, kAddressSize) &&\
-            compare_char_arrays(expected_struct.tel_number, got_struct.tel_number, kTelNumberSize) &&\
-            expected_struct.indebtedness == got_struct.indebtedness &&\
-            expected_struct.credit_limit == got_struct.credit_limit &&\
-            expected_struct.cash_payments == got_struct.cash_payments) {
-            printf("%s\n", "SUCCESS");
+        write_customer_data_to_file(customer_stream, &customer_input);
+        rewind(customer_stream);
+        write_transfer_data_to_file(transfer_stream, &transfer_input);
+        rewind(transfer_stream);
+        update_database(customer_stream, transfer_stream, database_stream, &customer_input, &transfer_input);
+        rewind(database_stream);
+        read_customer_data(database_stream, &buffer_data);
+        if (expected_output.number == buffer_data.number  &&\
+            arrays_compare(expected_output.name, buffer_data.name, kNameSize) &&\
+            arrays_compare(expected_output.surname, buffer_data.surname, kSurnameSize) &&\
+            arrays_compare(expected_output.address, buffer_data.address, kAddressSize) &&\
+            arrays_compare(expected_output.tel_number, buffer_data.tel_number, kTelNumberSize) &&\
+            expected_output.indebtedness == buffer_data.indebtedness &&\
+            expected_output.credit_limit == buffer_data.credit_limit &&\
+            expected_output.cash_payments == buffer_data.cash_payments) {
+            printf("%s\n", "done");
         } else {
-            printf("%s\n", "DATA MISSMATCH");
+            printf("%s\n", "Miss Data");
         }
-        fclose(cl_stream);
-        fclose(tr_stream);
-        fclose(db_stream);
+        fclose(customer_stream);
+        fclose(transfer_stream);
+        fclose(database_stream);
         remove(TEST_FILENAME_CLIENT);
         remove(TEST_FILENAME_TRANSFER);
         remove(TEST_FILENAME_DATABASE);
@@ -56,6 +58,6 @@ void test_read_write_data() {
 }
 
 int main(void) {
-    test_read_write_data();
+    test_customer_data();
     return 0;
 }

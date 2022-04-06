@@ -1,16 +1,16 @@
 #include <stdio.h>
-#include "record_data.h"
+#include "record_functions.h"
 #include "defines.h"
 
-void record_client_data(FILE *stream, data_t *client) {
-    print_client_input_info();
-    while (input_client_data(client) != -1) {
-        write_client_data_to_file(stream, client);
-        print_client_input_info();
+void record_customer_data(FILE *stream, my_data *client) {
+    print_customer_input_info();
+    while (input_customer_data(client) != -1) {
+        write_customer_data_to_file(stream, client);
+        print_customer_input_info();
     }
 }
 
-void print_client_input_info() {
+void print_customer_input_info() {
     printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n",
         "1 Number account: ",
         "2 Client name: ",
@@ -22,7 +22,7 @@ void print_client_input_info() {
         "8 Client cash payments: ");
 }
 
-int input_client_data(data_t *client) {
+int input_customer_data(my_data *client) {
     int success_read_args = scanf("%d%19s%19s%29s%14s%lf%lf%lf",
         &client->number,
         client->name,
@@ -32,14 +32,14 @@ int input_client_data(data_t *client) {
         &client->indebtedness,
         &client->credit_limit,
         &client->cash_payments);
-    if (success_read_args == client_fields_amount) {
-        return client_fields_amount;
+    if (success_read_args == customer_fields_amount) {
+        return customer_fields_amount;
     } else {
         return -1;
     }
 }
 
-void write_client_data_to_file(FILE *stream, data_t *client) {
+void write_customer_data_to_file(FILE *stream, my_data *client) {
     fprintf(stream, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
         client->number,
         client->name,
@@ -51,7 +51,7 @@ void write_client_data_to_file(FILE *stream, data_t *client) {
         client->cash_payments);
 }
 
-void record_transaction_data(FILE *stream, data_t *transfer) {
+void record_transaction_data(FILE *stream, my_data *transfer) {
     print_transfer_input_info();
     while (input_transfer_data(transfer) != -1) {
         write_transfer_data_to_file(stream, transfer);
@@ -65,7 +65,7 @@ void print_transfer_input_info() {
     "2 Client cash payments: ");
 }
 
-int input_transfer_data(data_t *transfer) {
+int input_transfer_data(my_data *transfer) {
     int success_read_args = scanf("%d %lf",
         &transfer->number,
         &transfer->cash_payments);
@@ -76,7 +76,7 @@ int input_transfer_data(data_t *transfer) {
     }
 }
 
-void write_transfer_data_to_file(FILE *stream, data_t *transfer) {
+void write_transfer_data_to_file(FILE *stream, my_data *transfer) {
     fprintf(stream, "%-3d%-6.2f\n",
         transfer->number,
         transfer->cash_payments);
