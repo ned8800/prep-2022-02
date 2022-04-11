@@ -3,9 +3,9 @@
 #include "record_functions.h"
 #include "custom_functions.h"
 
-#define TEST_FILENAME_CLIENT "customer_test.dat"
-#define TEST_FILENAME_TRANSFER "transfer_test.dat"
-#define TEST_FILENAME_DATABASE "db_test.dat"
+#define TEST_FILENAME_CLIENT "record.dat"
+#define TEST_FILENAME_TRANSFER "transaction.dat"
+#define TEST_FILENAME_DATABASE "blackrecord.dat"
 
 int arrays_compare(char* array1, char* array2, int array_length) {
     for (int i = 0; i < array_length; i++) {
@@ -23,9 +23,9 @@ void test_customer_data() {
     my_data expected_output = {1, "customer_name", "customer_sur", \
      "customer_add", "customer_tel", 120, 100, 1500};
     my_data buffer_data = {0};
-    FILE *customer_stream = fopen(TEST_FILENAME_CLIENT, "w+");
-    FILE *transfer_stream = fopen(TEST_FILENAME_TRANSFER, "w+");
-    FILE *database_stream = fopen(TEST_FILENAME_DATABASE, "w+");
+    FILE *customer_stream = fopen(TEST_FILENAME_CLIENT, "r+");
+    FILE *transfer_stream = fopen(TEST_FILENAME_TRANSFER, "r+");
+    FILE *database_stream = fopen(TEST_FILENAME_DATABASE, "r+");
     if (customer_stream == NULL || transfer_stream == NULL || database_stream == NULL) {
         puts("exit");
     } else {
@@ -44,7 +44,7 @@ void test_customer_data() {
             expected_output.indebtedness == buffer_data.indebtedness &&\
             expected_output.credit_limit == buffer_data.credit_limit &&\
             expected_output.cash_payments == buffer_data.cash_payments) {
-            printf("%s\n", "done");
+            printf("%s\n", "Done");
         } else {
             printf("%s\n", "Miss Data");
         }
