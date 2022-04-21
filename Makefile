@@ -1,59 +1,53 @@
 TARGET = ./main.out
-HDRS_DIR = project/include
+TST_TARGET = ./tests.out
+VALGRIND_LOG = "valgrind.log"
 
-SRCS = project/src/main.c
+# XXX: Don't forget backslash at the end of any line except the last one
+# Main
+HDRS = \
+	   project/include
+
 SRCS = \
-	project/src/main.c \
-	project/src/record_functions.c \
-	project/src/custom_functions.c
+	   project/src/main.c \
+	   project/src/matrix.c
 
-.PHONY: all build rebuild check test memtest clean
+# Test
+TST_HDRS = \
+           project/include \
+		   project/tests/include
 
-all: clean check test memtest
+TST_SRCS = \
+           project/src/matrix.c \
+		   project/tests/src/*.c
 
-$(TARGET): $(SRCS)
-	$(CC) -Wpedantic -Wall -Wextra -Werror -I $(HDRS_DIR) -o $(TARGET) $(CFLAGS) $(SRCS)
+.PHONY: all check build test memtest testextra memtestextra rebuild clean
 
-build: $(TARGET)
-
-rebuild: clean build
+all: clean check build test memtest testextra memtestextra
 
 check:
 	./run_linters.sh
 
-test: $(TARGET)
-	./btests/run.sh $(TARGET)
-	
-memtest: $(TARGET)
-	./btests/run.sh $(TARGET) --memcheck
+build: $(TARGET)
+
+test: $(TST_TARGET)
+	$(TST_TARGET)
+
+memtest: $(TST_TARGET)
+	./project/tests/memtest.sh ${TST_TARGET}
+
+testextra: $(TST_TARGET)
+	$(TST_TARGET) --with-extra
+
+memtestextra: $(TST_TARGET)
+	./project/tests/memtest.sh ${TST_TARGET} --with-extra
+
+rebuild: clean build
+
+$(TARGET): $(SRCS)
+	$(CC) -Wall -Wextra -Werror $(addprefix -I,$(HDRS)) -o $(TARGET) $(CFLAGS) $(SRCS) -lm
+
+$(TST_TARGET): $(TST_SRCS)
+	$(CC) -Wall -Wextra -Werror $(addprefix -I,$(TST_HDRS)) -o $(TST_TARGET) $(CFLAGS) $(TST_SRCS) -lm
 
 clean:
-	rm -rf $(TARGET) *.dat
-
-TARGET_TESTS = ./main_tests.out
-HDRS_DIR = project/include
-
-SRCS_TESTS = \
-	project/src/main_tests.c \
-	project/src/record_functions.c \
-	project/src/custom_functions.c
-
-.PHONY: all_tests build_tests rebuild_tests check_tests test_tests clean_tests
-
-all_tests: clean_tests check_tests test_tests
-
-$(TARGET_TESTS): $(SRCS_TESTS)
-	$(CC) -Wpedantic -Wall -Wextra -Werror -I $(HDRS_DIR) -o $(TARGET_TESTS) $(CFLAGS) $(SRCS_TESTS)
-
-build_tests: $(TARGET_TESTS)
-
-rebuild_tests: clean_tests build_tests
-
-check_tests:
-	./run_linters.sh
-
-test_tests: $(TARGET_TESTS)
-	./btests/run.sh $(TARGET_TESTS)
-
-clean_tests:
-	rm -rf $(TARGET_TESTS) *.dat 
+	rm -f $(TARGET) $(TST_TARGET) ${VALGRIND_LOG}
