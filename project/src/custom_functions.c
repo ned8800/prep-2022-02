@@ -19,7 +19,6 @@ int read_customer_data(FILE *stream, my_data *client) {
     }
 }
 
-
 void update_database(FILE *customer_stream, FILE *transfer_stream, \
 FILE *database_stream, my_data *client, my_data *transfer) {
     while (read_customer_data(customer_stream, client) != -1) {

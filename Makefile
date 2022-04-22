@@ -30,6 +30,7 @@ memtest: $(TARGET)
 clean:
 	rm -rf $(TARGET) *.dat
 
+#My tests
 TARGET_TESTS = ./main_tests.out
 HDRS_DIR = project/include
 
@@ -51,9 +52,6 @@ rebuild_tests: clean_tests build_tests
 
 check_tests:
 	./run_linters.sh
-
-test_tests: $(TARGET_TESTS)
-	./btests/run.sh $(TARGET_TESTS)
 
 clean_tests:
 	rm -rf $(TARGET_TESTS) *.dat 
