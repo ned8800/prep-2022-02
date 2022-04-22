@@ -3,14 +3,16 @@
 #include "record_functions.h"
 #include "custom_functions.h"
 
-#define TEST_FILENAME_CLIENT "record.dat"
-#define TEST_FILENAME_TRANSFER "transaction.dat"
-#define TEST_FILENAME_DATABASE "blackrecord.dat"
+#define TEST_FILENAME_CLIENT "myrecord.dat"
+#define TEST_FILENAME_TRANSFER "mytransaction.dat"
+#define TEST_FILENAME_DATABASE "myblackrecord.dat"
 
 int arrays_compare(char* array1, char* array2, int array_length) {
-    for (int i = 0; i < array_length; i++) {
-        if (array1[i] != array2[i]) {
-            return 0;
+    if (array1 != NULL && array2 != NULL) {
+        for (int i = 0; i < array_length; i++) {
+            if (array1[i] != array2[i]) {
+                return 0;
+            }
         }
     }
     return 1;
@@ -24,10 +26,18 @@ int test_customer_data() {
      "customer_add", "customer_tel", 120, 100, 1500};
     my_data buffer_data = {0};
     FILE *customer_stream = fopen(TEST_FILENAME_CLIENT, "r+");
+    if (customer_stream == NULL) {
+        return 1;
+    }
     FILE *transfer_stream = fopen(TEST_FILENAME_TRANSFER, "r+");
+    if (transfer_stream == NULL) {
+        fclose(customer_stream);
+        return 1;
+    }
     FILE *database_stream = fopen(TEST_FILENAME_DATABASE, "r+");
-    if (customer_stream == NULL || transfer_stream == NULL || database_stream == NULL) {
-        printf("%s\n", "Couldn't open file");
+    if (database_stream == NULL) {
+        fclose(customer_stream);
+        fclose(transfer_stream);
         return 1;
     }
     write_customer_data_to_file(customer_stream, &customer_input);
@@ -41,15 +51,13 @@ int test_customer_data() {
         !arrays_compare(expected_output.surname, buffer_data.surname, SurnameSizeCustomer) ||\
         !arrays_compare(expected_output.address, buffer_data.address, AddressSizeCustomer) ||\
         !arrays_compare(expected_output.tel_number, buffer_data.tel_number, TelNumberSizeCustomer)) {
-        printf("%s\n", "Miss Array Data");
-        return 1;
+        return 2;
     }
     if (expected_output.number != buffer_data.number  ||\
         expected_output.indebtedness != buffer_data.indebtedness ||\
         expected_output.credit_limit != buffer_data.credit_limit ||\
         expected_output.cash_payments != buffer_data.cash_payments) {
-        printf("%s\n", "Miss Static Data");
-        return 1;
+        return 3;
     }
     fclose(customer_stream);
     fclose(transfer_stream);
@@ -62,10 +70,21 @@ int test_customer_data() {
 }
 
 int main(void) {
-    if (test_customer_data() != 0) {
+    int flag = 0;
+    flag = test_customer_data();
+    switch (flag) {
+    case 1:
+        printf("%s\n", file_open_error);
+        break;
+    case 2:
+        printf("%s\n", "Miss Array Data");
+        break;
+    case 3:
+        printf("%s\n", "Miss Static Data");
+        break;
+    default:
         printf("%s\n", "Done!");
-    } else {
-        printf("%s\n", "Data Error");
+        break;
     }
     return 0;
 }

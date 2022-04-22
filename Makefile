@@ -53,5 +53,8 @@ rebuild_tests: clean_tests build_tests
 check_tests:
 	./run_linters.sh
 
+memtest_tests: $(TARGET_TESTS)
+	 $(TARGET_TESTS) --memcheck
+
 clean_tests:
 	rm -rf $(TARGET_TESTS) *.dat 

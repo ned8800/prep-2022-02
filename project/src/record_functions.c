@@ -40,22 +40,26 @@ int input_customer_data(my_data *client) {
 }
 
 void write_customer_data_to_file(FILE *stream, my_data *client) {
-    fprintf(stream, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
-        client->number,
-        client->name,
-        client->surname,
-        client->address,
-        client->tel_number,
-        client->indebtedness,
-        client->credit_limit,
-        client->cash_payments);
+    if (stream != NULL && client != NULL) {
+        fprintf(stream, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
+            client->number,
+            client->name,
+            client->surname,
+            client->address,
+            client->tel_number,
+            client->indebtedness,
+            client->credit_limit,
+            client->cash_payments);
+    }
 }
 
 void record_transaction_data(FILE *stream, my_data *transfer) {
-    print_transfer_input_info();
-    while (input_transfer_data(transfer) != -1) {
-        write_transfer_data_to_file(stream, transfer);
+    if (stream != NULL && transfer != NULL) {
         print_transfer_input_info();
+        while (input_transfer_data(transfer) != -1) {
+            write_transfer_data_to_file(stream, transfer);
+            print_transfer_input_info();
+        }
     }
 }
 
@@ -66,6 +70,9 @@ void print_transfer_input_info() {
 }
 
 int input_transfer_data(my_data *transfer) {
+    if (transfer == NULL) {
+        return -1;
+    }
     int success_read_args = scanf("%d %lf",
         &transfer->number,
         &transfer->cash_payments);
@@ -77,7 +84,9 @@ int input_transfer_data(my_data *transfer) {
 }
 
 void write_transfer_data_to_file(FILE *stream, my_data *transfer) {
-    fprintf(stream, "%-3d%-6.2f\n",
-        transfer->number,
-        transfer->cash_payments);
+    if (stream != NULL && transfer != NULL) {
+        fprintf(stream, "%-3d%-6.2f\n",
+            transfer->number,
+            transfer->cash_payments);
+    }
 }

@@ -5,6 +5,11 @@
 #define filename_for_transfer_data "transaction.dat"
 #define filename_for_database "blackrecord.dat"
 
+#define access_error "Not acess"
+#define simple_error "Error"
+#define main_menu "please enter action\n1 enter data client:\n2 enter data transaction:\n3 update base\n"
+#define file_open_error "Couldn't open file"
+
 enum cases {
     case_record_cliend_data = 1,
     case_record_transfer_data,
