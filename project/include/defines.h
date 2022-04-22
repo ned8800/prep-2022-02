@@ -19,7 +19,7 @@ enum cases {
 #define customer_fields_amount 8
 #define transfer_fields_amount 2
 
-typedef struct my_data {
+typedef struct data {
     int number;
     char name[NameSizeCustomer];
     char surname[SurnameSizeCustomer];
